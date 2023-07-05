@@ -30,54 +30,50 @@ class UserDashboard extends StatelessWidget {
       body: ListView(children: [
         Container(
           padding: EdgeInsets.all(20),
-          child: Column(
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+            Column(
               crossAxisAlignment: CrossAxisAlignment.center,
-              // mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  // mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 100,
-                      alignment: Alignment.topRight,
-                      height: 100,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          image: const DecorationImage(
-                              image: NetworkImage(
-                                  'https://img.freepik.com/premium-vector/ar-letter-logo-design_579179-1039.jpg'),
-                              fit: BoxFit.cover)),
-                    ),
-                    const Gap(30),
-                    ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const FavoritePage()));
-                        },
-                        child: const Text(
-                          'Favourites',
-                          style: TextStyle(fontSize: 20, color: Colors.black),
-                        )),
-                    const Gap(30),
-                    Text(
-                      getGreeting(),
-                      style: const TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                    const Gap(30),
-                    const Text(
-                      'You can see the All Hotels',
-                      style:
-                          TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
-                    )
-                  ],
+                Container(
+                  width: 100,
+                  alignment: Alignment.topRight,
+                  height: 100,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      image: const DecorationImage(
+                          image: NetworkImage(
+                              'https://img.freepik.com/premium-vector/ar-letter-logo-design_579179-1039.jpg'),
+                          fit: BoxFit.cover)),
+                ),
+                const Gap(30),
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const FavoritePage()));
+                    },
+                    child: const Text(
+                      'Favourites',
+                      style: TextStyle(fontSize: 20, color: Colors.black),
+                    )),
+                const Gap(30),
+                Text(
+                  getGreeting(),
+                  style: const TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                const Gap(30),
+                const Text(
+                  'You can see the All Hotels',
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
                 )
-              ]),
+              ],
+            )
+          ]),
         ),
         const Gap(20),
         const UserHotels(),

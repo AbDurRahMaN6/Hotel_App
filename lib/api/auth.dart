@@ -35,28 +35,6 @@ class ApiManager {
     print(data);
     print(jsonData);
 
-    // List<Hotels> hotel = [];
-    // for (var e in jsonData) {
-    //   Hotels hotels = Hotels(
-    //       hotelName: "hotelName",
-    //       district: "district",
-    //       address: "address",
-    //       phoneNumber: "phoneNumber",
-    //       desc: "desc",
-    //       image: "image",
-    //       rooms: );
-    //   hotels.id = e['id'];
-    //   hotels.hotelName = e["hotelName"];
-    //   hotels.district = e["district"];
-    //   hotels.address = e["address"];
-    //   hotels.phoneNumber = e["phoneNumber"];
-    //   hotels.image = e["image"];
-    //   hotels.desc = e["desc"];
-    //   hotel.add(hotels);
-    // }
-
-    // return hotel;
-
     List<Hotels> hotelsList = [];
     for (var e in jsonData) {
       List<Rooms>? roomsList;
@@ -70,6 +48,9 @@ class ApiManager {
               Bookings bookingObj = Bookings(
                 startDate: booking['startDate'],
                 endDate: booking['endDate'],
+                username: booking['username'],
+                mobileNo: booking['mobileNo'],
+                email: booking['email'],
               );
               bookingsList.add(bookingObj);
             }

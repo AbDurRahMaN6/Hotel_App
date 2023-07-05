@@ -9,7 +9,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:gap/gap.dart';
+import '../../create_rooms/updateRoomScreen.dart';
 import 'delete_hotel.dart';
 
 class HotelScreen extends StatefulWidget {
@@ -21,7 +22,7 @@ class HotelScreen extends StatefulWidget {
 
 class _HotelScreenState extends State<HotelScreen> {
   Hotels? hotel;
-  List<dynamic>? hotelList;
+  List<dynamic>? hotelListing;
 
   Future<void> deleteHotel1(Hotels? hotel, String? id) async {
     String deleteUrl = 'http://172.18.9.11:8080/api/hotels/$id';
@@ -41,13 +42,53 @@ class _HotelScreenState extends State<HotelScreen> {
 
     if (data.statusCode == 204) {
       setState(() {
-        hotelList?.remove(hotel);
+        hotelListing?.remove(hotel);
       });
       print('Hotel deleted successfully');
     } else {
       print('Failed to delete hotel. Status code: ${data.statusCode}');
       print('Response body: ${data.body}');
     }
+  }
+
+  Future<bool> deleteRoom(String? hotelId, String? roomNumber) async {
+    final url = Uri.parse(
+        'http://172.18.9.11:8080/api/hotels/$hotelId/rooms/$roomNumber');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final accessToken = prefs.getString('accessToken');
+
+    try {
+      final response = await http.delete(url, headers: {
+        "Authorization": "Bearer $accessToken",
+        "Accept": "*/*",
+        "Content-Type": "application/json",
+        "Accept-Encoding": "gzip, deflate, br",
+        "User-Agent": "PostmanRuntime/7.29.2",
+        "Connection": "keep-alive",
+      });
+      if (response.statusCode == 200) {
+        setState(() {
+          // Refresh the hotel listing after deletion
+          hotelListing = hotelListing?.where((h) => h.id != hotelId).toList();
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Room deleted successfully')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to delete room')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to delete room')),
+      );
+    }
+
+    print('=========HOTELID=============$hotelId===================');
+    print('=====================HOTELNUMBER===========$roomNumber============');
+
+    return false;
   }
 
   @override
@@ -59,7 +100,7 @@ class _HotelScreenState extends State<HotelScreen> {
             if (snapshot.data == null) {
               return Container(child: const Center(child: Icon(Icons.error)));
             }
-            hotelList = snapshot.data;
+            hotelListing = snapshot.data;
             return DataTable(
                 columns: const <DataColumn>[
                   DataColumn(
@@ -241,6 +282,85 @@ class _HotelScreenState extends State<HotelScreen> {
                                               },
                                             ),
                                           ),
+                                          const Gap(10),
+                                          Row(
+                                            children: [
+                                              IconButton(
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          UpdateRoomScreen(
+                                                        hotelId: newHotel?.id,
+                                                        roomNumber: newHotel
+                                                                ?.rooms?[index]
+                                                                .roomNumber ??
+                                                            '',
+                                                      ),
+                                                    ),
+                                                  ).then((_) {
+                                                    setState(() {
+                                                      // Refresh the hotelListing after update
+                                                      hotelListing =
+                                                          ApiManager()
+                                                                  .getHotels()
+                                                              as List?;
+                                                    });
+                                                  });
+                                                },
+                                                icon: const Icon(
+                                                    color: Colors.blue,
+                                                    Icons.edit),
+                                              ),
+                                              IconButton(
+                                                onPressed: () {
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (context) =>
+                                                          AlertDialog(
+                                                              title: const Text(
+                                                                  'Confirmation'),
+                                                              content: const Text(
+                                                                  'Are you sure you want to delete this room?'),
+                                                              actions: [
+                                                                TextButton(
+                                                                  onPressed: () =>
+                                                                      Navigator.pop(
+                                                                          context),
+                                                                  child: const Text(
+                                                                      'Cancel'),
+                                                                ),
+                                                                TextButton(
+                                                                  onPressed:
+                                                                      () {
+                                                                    final roomNumber = newHotel
+                                                                        ?.rooms?[
+                                                                            index]
+                                                                        .roomNumber;
+                                                                    if (roomNumber !=
+                                                                        null) {
+                                                                      deleteRoom(
+                                                                          newHotel
+                                                                              ?.id,
+                                                                          roomNumber);
+                                                                    }
+                                                                    print(
+                                                                        '=========ICON======$roomNumber');
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                  },
+                                                                  child: const Text(
+                                                                      'Delete'),
+                                                                ),
+                                                              ]));
+                                                },
+                                                icon: const Icon(
+                                                    color: Colors.red,
+                                                    Icons.delete),
+                                              ),
+                                            ],
+                                          )
                                         ],
                                       ),
                                     ),
@@ -262,11 +382,10 @@ class _HotelScreenState extends State<HotelScreen> {
                                       ),
                                     ).then((_) {
                                       setState(() {
-                                        hotelList =
+                                        hotelListing =
                                             ApiManager().getHotels() as List?;
                                       });
                                     });
-                                    // => Navigator.pop(context));
                                   },
                                   icon: const Icon(
                                       color: Colors.green, Icons.add),
@@ -291,10 +410,10 @@ class _HotelScreenState extends State<HotelScreen> {
                               ),
                             ).then((_) {
                               setState(() {
-                                hotelList = ApiManager().getHotels() as List?;
+                                hotelListing =
+                                    ApiManager().getHotels() as List?;
                               });
                             });
-                            // => Navigator.pop(context));
                           },
                           icon: const Icon(color: Colors.green, Icons.edit),
                         ),

@@ -15,10 +15,10 @@ class Rooms {
 
   Rooms(
       {required this.roomNumber,
-      required this.available,
-      required this.roomImage,
+      this.available,
+      this.roomImage,
       required this.price,
-      required this.bookings});
+      this.bookings});
 
   Rooms.fromJson(Map<String, dynamic> json) {
     roomNumber = json['roomNumber'];

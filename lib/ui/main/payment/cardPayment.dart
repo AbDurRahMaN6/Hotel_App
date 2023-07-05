@@ -83,33 +83,47 @@ class _CardPaymentState extends State<CardPayment> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: SingleChildScrollView(
-          child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(children: [
-                TextField(
-                  controller: cardNumberController,
-                  decoration: const InputDecoration(labelText: 'Card Number'),
-                ),
-                TextField(
-                  controller: cardHolderNameController,
-                  decoration:
-                      const InputDecoration(labelText: 'Card Holder Name'),
-                ),
-                TextField(
-                  controller: expiryDateController,
-                  decoration: const InputDecoration(labelText: 'Expiry Date'),
-                ),
-                TextField(
-                  controller: cvvController,
-                  decoration: const InputDecoration(labelText: 'CVV'),
-                ),
-                ElevatedButton(
-                  onPressed: processPayment,
-                  child: const Text('Process Payment'),
-                ),
-              ]))),
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'Enter Payment Details',
+              style: TextStyle(fontSize: 24),
+            ),
+            const SizedBox(height: 20),
+            const TextField(
+              decoration: InputDecoration(
+                labelText: 'Name on Card',
+              ),
+            ),
+            const SizedBox(height: 20),
+            const TextField(
+              decoration: InputDecoration(
+                labelText: 'Card Number',
+              ),
+            ),
+            const SizedBox(height: 10),
+            const TextField(
+              decoration: InputDecoration(
+                labelText: 'Expiry Date',
+              ),
+            ),
+            const SizedBox(height: 10),
+            const TextField(
+              decoration: InputDecoration(
+                labelText: 'CVV',
+              ),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {},
+              child: const Text('Make Payment'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
