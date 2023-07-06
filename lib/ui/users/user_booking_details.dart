@@ -38,14 +38,6 @@ class _UserBookingDetailsState extends State<UserBookingDetails> {
         username: _usernameController.text,
         mobileNo: _mobileNoController.text,
         email: _emailController.text);
-    // final Map<String, dynamic> bookingData = {
-    //   "startDate": startDate!.toIso8601String(),
-    //   "endDate": endDate!.toIso8601String(),
-    //   "username": _usernameController.text,
-    //   "mobileNo": _mobileNoController.text,
-    //   "email": _emailController.text,
-
-    // };
 
     final response = await http.post(
       Uri.parse(bookingUrl),
@@ -228,18 +220,29 @@ class _UserBookingDetailsState extends State<UserBookingDetails> {
               ),
               const SizedBox(height: 25.0),
               ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.red),
+                    padding:
+                        MaterialStateProperty.all(const EdgeInsets.all(20)),
+                  ),
                   onPressed: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const CardPayment()));
                   },
-                  child: const Text('Payment Method')),
-              const SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: () => bookRoom(),
-                child: const Text("Book Room"),
-              ),
+                  child: const Text(
+                    'Continue Booking',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w700),
+                  )),
+              // const SizedBox(height: 16.0),
+              // ElevatedButton(
+              //   onPressed: () => bookRoom(),
+              //   child: const Text("Book Room"),
+              // ),
             ],
           ),
         ),

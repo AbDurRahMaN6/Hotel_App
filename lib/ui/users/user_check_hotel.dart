@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:gap/gap.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../api/auth.dart';
 import 'booking.dart';
@@ -22,6 +23,14 @@ class _UserHotelsState extends State<UserHotels> {
   List<bool> isFavoriteList = [];
   int? selectedHotelIndex;
   List<Hotels?> favoriteHotels = [];
+
+  GoogleMapController? mapController;
+
+  final LatLng _center = const LatLng(45.521563, -122.677433);
+
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+  }
 
   @override
   void initState() {
@@ -118,10 +127,27 @@ class _UserHotelsState extends State<UserHotels> {
                                 subtitle: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      hotel.district ?? '',
-                                      style: const TextStyle(
-                                          color: Colors.lightBlue),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          hotel.district ?? '',
+                                          style: const TextStyle(
+                                              color: Colors.lightBlue),
+                                        ),
+                                        TextButton(
+                                            onPressed: () {
+                                              GoogleMap(
+                                                onMapCreated: _onMapCreated,
+                                                initialCameraPosition:
+                                                    CameraPosition(
+                                                        target: _center,
+                                                        zoom: 11),
+                                              );
+                                            },
+                                            child: const Text('Maps'))
+                                      ],
                                     ),
                                     Text(
                                       hotel.address ?? '',
