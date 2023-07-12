@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:auth_ui/models/hotels.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,9 +8,11 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:gap/gap.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
+import 'package:http/http.dart' as http;
+import 'package:geolocator/geolocator.dart';
 import '../../api/auth.dart';
 import 'booking.dart';
+import 'hotelLocationScreen.dart';
 
 class UserHotels extends StatefulWidget {
   const UserHotels({super.key});
@@ -23,23 +27,47 @@ class _UserHotelsState extends State<UserHotels> {
   List<bool> isFavoriteList = [];
   int? selectedHotelIndex;
   List<Hotels?> favoriteHotels = [];
+  Position? _currentPosition;
 
-  GoogleMapController? mapController;
+  // GoogleMapController? mapController;
 
-  final LatLng _center = const LatLng(45.521563, -122.677433);
+  // final LatLng _center = const LatLng(45.521563, -122.677433);
 
-  void _onMapCreated(GoogleMapController controller) {
-    mapController = controller;
-  }
+  // void _onMapCreated(GoogleMapController controller) {
+  //   mapController = controller;
+  // }
 
   @override
   void initState() {
     super.initState();
     fetchHotels();
+    _getCurrentLocation();
+  }
+
+  Future<void> _getCurrentLocation() async {
+    final position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    setState(() {
+      _currentPosition = position;
+    });
   }
 
   void fetchHotels() async {
     List? hotels = await ApiManager().getHotels();
+    // List<Hotels?> updatedHotelList = [];
+    // for (var hotel in hotels!) {
+    // LatLng location = await getHotelLocation(hotel.address);
+    // updatedHotelList.add(Hotels(
+    //   hotelName: '',
+    //   address: '',
+    //   desc: '',
+    //   district: '',
+    //   image: '',
+    //   phoneNumber: '',
+    //   rooms: [],
+    //   location: location,
+    // ));
+    // }
     setState(() {
       hotelList = hotels!;
       isFavoriteList = List.generate(hotels.length, (_) => false);
@@ -71,6 +99,29 @@ class _UserHotelsState extends State<UserHotels> {
   //   );
   // }
 
+  Future<LatLng> getHotelLocation(String address) async {
+    String apiKey = 'AIzaSyDs4GlnwUm0ysqTORiCN93KQcHIRH2qUaA';
+    String encodedAddress = Uri.encodeComponent(address);
+    String url =
+        'https://maps.googleapis.com/maps/api/geocode/json?address=$encodedAddress&key=$apiKey';
+
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      if (data['status'] == 'OK') {
+        final results = data['results'];
+        if (results.isNotEmpty) {
+          final location = results[0]['geometry']['location'];
+          double latitude = location['lat'];
+          double longitude = location['lng'];
+          return LatLng(latitude, longitude);
+        }
+      }
+    }
+
+    return const LatLng(0, 0); // Default location if unable to retrieve
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -79,7 +130,7 @@ class _UserHotelsState extends State<UserHotels> {
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.data == null) {
                 return Container(
-                  child: Center(
+                  child: const Center(
                     child: Icon(Icons.error),
                   ),
                 );
@@ -137,14 +188,37 @@ class _UserHotelsState extends State<UserHotels> {
                                               color: Colors.lightBlue),
                                         ),
                                         TextButton(
-                                            onPressed: () {
-                                              GoogleMap(
-                                                onMapCreated: _onMapCreated,
-                                                initialCameraPosition:
-                                                    CameraPosition(
-                                                        target: _center,
-                                                        zoom: 11),
+                                            onPressed: () async {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      HotelLocationScreen(
+                                                    hotelAddress:
+                                                        hotel.address ?? '',
+                                                  ),
+                                                ),
                                               );
+                                              // LatLng location =
+                                              //     await getHotelLocation(
+                                              //         hotel.address ?? '');
+                                              // Navigator.push(
+                                              //   context,
+                                              //   MaterialPageRoute(
+                                              //     builder: (context) => HotelLocationScreen(
+                                              //       hotelName: hotel.hotelName ?? '',
+                                              //       address: hotel.address ?? '',
+                                              //       location: location,
+                                              //     ),
+                                              //   ),
+                                              // );
+                                              // GoogleMap(
+                                              //   onMapCreated: _onMapCreated,
+                                              //   initialCameraPosition:
+                                              //       CameraPosition(
+                                              //           target: _center,
+                                              //           zoom: 11),
+                                              // );
                                             },
                                             child: const Text('Maps'))
                                       ],

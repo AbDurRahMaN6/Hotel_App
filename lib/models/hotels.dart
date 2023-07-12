@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:auth_ui/models/rooms.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 Hotels hotelsFromJson(String str) => Hotels.fromJson(json.decode(str));
 
@@ -15,6 +16,7 @@ class Hotels {
   String? image;
   String? desc;
   List<Rooms>? rooms;
+  LatLng? location;
 
   Hotels({
     required this.hotelName,
@@ -24,6 +26,7 @@ class Hotels {
     required this.image,
     required this.desc,
     required this.rooms,
+    this.location,
     this.id,
   });
 
