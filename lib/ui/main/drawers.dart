@@ -18,32 +18,31 @@ class _DrawersState extends State<Drawers> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Hotel Management'),
+        title: const Text('Hotel Management'),
       ),
-      body: Center(child: Text('Hi')),
+      body: const Center(child: Text('Hi')),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.only(top: minimumPadding, bottom: minimumPadding),
           children: <Widget>[
-            DrawerHeader(
-              child: Text(''),
+            const DrawerHeader(
               decoration: BoxDecoration(
                 color: Colors.blue,
               ),
+              child: Text(''),
             ),
             ListTile(
-              title: Text('Create Employee'),
+              title: const Text('Create Employee'),
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => CreateUser()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const CreateUser()));
               },
             ),
             ListTile(
               title: Text('All Employees List'),
-              onTap: () {
-                // Navigator.push(context,
-                //     MaterialPageRoute(builder: (context) => HotelScreen()));
-              },
+              onTap: () {},
             )
           ],
         ),

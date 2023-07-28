@@ -8,19 +8,81 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/bookings.dart';
 import '../models/rooms.dart';
-// import 'package:dio/dio.dart';
 
 class ApiManager {
   String url1 = 'http://172.18.9.11:8080/api/auth/signin';
   String url2 = 'http://172.18.9.11:8080/api/auth/signup';
   String url3 = 'http://172.18.9.11:8080/api/hotels';
-  // String url4 = 'http://172.18.9.11:8080/api/hotels/$id';
+
+  Future<List<dynamic>?> getSearchHotels({String? hotelName}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final accessToken = prefs.getString('accessToken');
+
+    var searchUrl = Uri.parse(url3);
+    if (hotelName != null) {
+      searchUrl =
+          Uri.parse('http://172.18.9.11:8080/api/hotels?hotelName=$hotelName');
+    }
+
+    var data = await http.get(searchUrl, headers: {
+      "Accept": "*/*",
+      "Content-Type": "application/json",
+      "Accept-Encoding": "gzip, deflate, br",
+      "User-Agent": "PostmanRuntime/7.29.2",
+      "Connection": "keep-alive",
+      'Authorization': 'Bearer $accessToken'
+    });
+
+    var jsonData = json.decode(data.body);
+
+    List<Hotels> hotelsList = [];
+    for (var e in jsonData) {
+      List<Rooms>? roomsList;
+      if (e['rooms'] != null) {
+        roomsList = <Rooms>[];
+        for (var room in e['rooms']) {
+          List<Bookings>? bookingsList;
+          if (room['bookings'] != null) {
+            bookingsList = <Bookings>[];
+            for (var booking in room['bookings']) {
+              Bookings bookingObj = Bookings(
+                startDate: booking['startDate'],
+                endDate: booking['endDate'],
+                username: booking['username'],
+                mobileNo: booking['mobileNo'],
+                email: booking['email'],
+              );
+              bookingsList.add(bookingObj);
+            }
+          }
+          Rooms roomObj = Rooms(
+            roomNumber: room['roomNumber'],
+            available: room['available'],
+            roomImage: room['roomImage'],
+            price: room['price'],
+            bookings: bookingsList,
+          );
+          roomsList.add(roomObj);
+        }
+      }
+      Hotels hotel = Hotels(
+        id: e['id'],
+        hotelName: e['hotelName'],
+        district: e['district'],
+        address: e['address'],
+        phoneNumber: e['phoneNumber'],
+        desc: e['desc'],
+        image: e['image'],
+        rooms: roomsList,
+      );
+      hotelsList.add(hotel);
+    }
+    return hotelsList;
+  }
 
   Future<List<dynamic>?> getHotels() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final accessToken = prefs.getString('accessToken');
-    print('===================ABBBB===============');
-    print(accessToken);
 
     var data = await http.get(Uri.parse(url3), headers: {
       "Accept": "*/*",
@@ -32,8 +94,6 @@ class ApiManager {
     });
 
     var jsonData = json.decode(data.body);
-    print(data);
-    print(jsonData);
 
     List<Hotels> hotelsList = [];
     for (var e in jsonData) {
@@ -81,7 +141,6 @@ class ApiManager {
   }
 
   Future<Hotels> createHotel(BuildContext context, Hotels? hotel) async {
-    print('===========================CREATE HOTEL===========');
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final accessToken = prefs.getString('accessToken');
 
@@ -205,11 +264,8 @@ class ApiManager {
       );
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body);
-        print(jsonResponse);
-        print('=======================Hi===========');
-        userModel = Users.fromJson(jsonResponse);
 
-        print(userModel.accessToken);
+        userModel = Users.fromJson(jsonResponse);
 
         final accessToken = userModel.accessToken;
 
@@ -225,7 +281,6 @@ class ApiManager {
       }
       return userModel;
     } catch (e) {
-      print('========EXCEPTION===============$e');
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(e.toString())));
     }

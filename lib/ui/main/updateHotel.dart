@@ -27,7 +27,6 @@ class _UpdateHotelsState extends State<UpdateHotels> {
   var _descController = TextEditingController();
 
   Future<void> _updateHotels() async {
-    // String updateUrl = '';
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final accessToken = prefs.getString('accessToken');
     final hotel = Hotels(
@@ -54,10 +53,8 @@ class _UpdateHotelsState extends State<UpdateHotels> {
       },
       body: json.encode(hotel.toJson()),
     );
-    print('${widget.hotel?.id}');
 
     if (response.statusCode == 200) {
-      print('Hotel updated successfully');
       final updatedHotel = Hotels.fromJson(json.decode(response.body));
       showDialog(
         context: context,

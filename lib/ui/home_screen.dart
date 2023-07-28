@@ -28,10 +28,9 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.lightBlue,
-      // ignore: unnecessary_new
-      appBar: new AppBar(
+      appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.draw_rounded),
+          icon: const Icon(Icons.draw_rounded),
           onPressed: () {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => const Drawers()));
@@ -92,7 +91,6 @@ class Home extends StatelessWidget {
                     )),
                 const Gap(20),
                 const HotelScreen(),
-                // const MyHotel()
               ],
             ))
       ]),

@@ -35,8 +35,6 @@ class _HotelLocationScreenState extends State<HotelLocationScreen> {
     String apiKey = 'AIzaSyCz1dgK7O6iTYOIoP4dPmwezmKRmQsFHEA';
     String encodedAddress = Uri.encodeComponent(address);
     String url =
-        // 'https://maps.googleapis.com/maps/api/geocode/json?address=$encodedAddress&key=$apiKey';
-        // 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=500&types=restaurant&name=harbour&key=$apiKey';
         'https://maps.googleapis.com/maps/api/place/nearbysearch/json?address=$encodedAddress&key=$apiKey';
 
     final response = await http.get(Uri.parse(url));

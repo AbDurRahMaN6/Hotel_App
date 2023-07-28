@@ -1,4 +1,5 @@
 import 'package:auth_ui/ui/users/favorite%20.dart';
+import 'package:auth_ui/ui/users/search/search.dart';
 import 'package:auth_ui/ui/users/user_check_hotel.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -29,7 +30,7 @@ class UserDashboard extends StatelessWidget {
       backgroundColor: Colors.blueGrey,
       body: ListView(children: [
         Container(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
             Column(
@@ -75,6 +76,7 @@ class UserDashboard extends StatelessWidget {
             )
           ]),
         ),
+        const Gap(20),
         const Gap(20),
         const UserHotels(),
       ]),

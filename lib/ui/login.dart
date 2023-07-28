@@ -23,7 +23,6 @@ class _LoginState extends State<Login> {
   String? password;
 
   void submitSignInForm() {
-    print('=============CLICK SUBMIT==========');
     final isValid = formKey.currentState?.validate();
     if ((isValid ?? false)) {
       formKey.currentState?.save();
@@ -34,8 +33,6 @@ class _LoginState extends State<Login> {
           value.roles.forEach(
             (element) {
               if (element == Roles.roleAdmin.names) {
-                print('=====Values=====');
-                print(element);
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => const Home()));
               } else if (element == Roles.roleUser.names) {
@@ -164,15 +161,13 @@ class _LoginState extends State<Login> {
   }
 
   Roles determineUserRole(dynamic userResponse) {
-    // Parse the user response to determine the role
-    // Assuming the response contains a 'role' field
     final roleString = userResponse['role'] as String?;
     if (roleString == Roles.roleAdmin.names) {
       return Roles.roleAdmin;
     } else if (roleString == Roles.roleUser.names) {
       return Roles.roleUser;
     } else {
-      return Roles.roleManager; // Assuming this is the manager role
+      return Roles.roleManager;
     }
   }
 }

@@ -18,7 +18,6 @@ class HotelProvider with ChangeNotifier {
   }
 
   void removeHotel(Hotels hotel) {
-    // Implement the logic to remove the hotel from the list
     notifyListeners();
   }
 }

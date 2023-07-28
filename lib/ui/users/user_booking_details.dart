@@ -238,11 +238,6 @@ class _UserBookingDetailsState extends State<UserBookingDetails> {
                         fontSize: 30,
                         fontWeight: FontWeight.w700),
                   )),
-              // const SizedBox(height: 16.0),
-              // ElevatedButton(
-              //   onPressed: () => bookRoom(),
-              //   child: const Text("Book Room"),
-              // ),
             ],
           ),
         ),

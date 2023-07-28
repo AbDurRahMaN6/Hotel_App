@@ -17,7 +17,6 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   final formKey = GlobalKey<FormState>();
-  // Roles? _roleForUser = Roles.roleUser;
   String? userName;
   String? mail;
   String? pasword;
@@ -156,47 +155,6 @@ class _RegisterState extends State<Register> {
                   const SizedBox(
                     height: 10.0,
                   ),
-                  // const Text(
-                  //   "What is your Role?",
-                  //   style: TextStyle(
-                  //     fontSize: 16,
-                  //     color: Colors.black,
-                  //   ),
-                  // ),
-                  // RadioListTile<Roles>(
-                  //   title: const Text(
-                  //     'User',
-                  //     style: TextStyle(
-                  //       fontSize: 16,
-                  //       color: Colors.black,
-                  //     ),
-                  //   ),
-                  //   value: Roles.roleUser,
-                  //   groupValue: _roleForUser,
-                  //   onChanged: (Roles? value) {
-                  //     setState(() {
-                  //       _roleForUser = value;
-                  //       role = Roles.roleUser.names;
-                  //     });
-                  //   },
-                  // ),
-                  // RadioListTile<Roles>(
-                  //   title: const Text(
-                  //     'Manager',
-                  //     style: TextStyle(
-                  //       fontSize: 16,
-                  //       color: Colors.black,
-                  //     ),
-                  //   ),
-                  //   value: Roles.roleManager,
-                  //   groupValue: _roleForUser,
-                  //   onChanged: (Roles? value) {
-                  //     setState(() {
-                  //       _roleForUser = value;
-                  //       role = Roles.roleManager.names;
-                  //     });
-                  //   },
-                  // ),
                   const SizedBox(
                     height: 10.0,
                   ),

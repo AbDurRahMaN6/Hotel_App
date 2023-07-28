@@ -31,8 +31,6 @@ class _MyHotelState extends State<MyHotel> {
     final picker = ImagePicker();
     final pickedImage = await picker.pickImage(source: source);
     if (pickedImage != null) {
-      print(pickedImage.path);
-      print(pickedImage.name);
       setState(() {
         _image = File(pickedImage.path);
       });
@@ -43,7 +41,6 @@ class _MyHotelState extends State<MyHotel> {
     setState(() {
       _isLoading = true;
     });
-    print('===========================CREATE HOTEL===========');
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final accessToken = prefs.getString('accessToken');
 
@@ -70,7 +67,6 @@ class _MyHotelState extends State<MyHotel> {
     );
 
     setState(() {
-      // Hide the loading indicator
       _isLoading = false;
     });
 
